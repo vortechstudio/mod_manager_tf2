@@ -19,5 +19,5 @@ Route::get('/', function () {
 
 
 Route::get('/core', [\App\Http\Controllers\CoreController::class, 'index'])->name('core');
-Route::get('/config', [\App\Http\Controllers\CoreController::class, 'index'])->name('config');
-Route::post('/config', [\App\Http\Controllers\CoreController::class, 'update'])->name('config.update');
+Route::get('/config', [\App\Http\Controllers\ConfigController::class, 'index'])->name('config');
+Route::post('/config', [\App\Http\Controllers\ConfigController::class, 'update'])->name('config.update');

@@ -1,0 +1,12 @@
+version: 0.0.1
+files:
+  - url: modManagerTF2-0.0.1.AppImage
+    sha512: 5Gnx0cgOX6GZxI/ezziMzon4o5zZVPljX9N5Gd1lXyytRQ48Ysa7+XeVsoZ/Is8f1CwWhCyC05K7KSGdXS3LWQ==
+    size: 131012044
+    blockMapSize: 136672
+  - url: modmanagertf2_0.0.1_amd64.deb
+    sha512: v2AA0Dw1A0SyKBm2ZJyvPDVNsiCSYXD5v4d7FczXVL7lat15qf5bWAXLd3POh+fp4sUmkMj3G9G3AsLnf6sCCA==
+    size: 90688760
+path: modManagerTF2-0.0.1.AppImage
+sha512: 5Gnx0cgOX6GZxI/ezziMzon4o5zZVPljX9N5Gd1lXyytRQ48Ysa7+XeVsoZ/Is8f1CwWhCyC05K7KSGdXS3LWQ==
+releaseDate: '2024-10-13T16:31:13.685Z'
