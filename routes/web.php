@@ -15,7 +15,8 @@ use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
     return view('welcome');
-});
+})->name('home');
+
 
 Route::get('/core', [\App\Http\Controllers\CoreController::class, 'index'])->name('core');
 Route::get('/config', [\App\Http\Controllers\CoreController::class, 'index'])->name('config');

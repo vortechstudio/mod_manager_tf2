@@ -1,12 +1,12 @@
 <div class="d-flex flex-column flex-shrink-0 p-3 text-bg-dark" style="width: 320px; height: 768px">
-    <a href="/" class="d-flex align-items-center mb-3 mb-md-0 me-md-auto text-white text-decoration-none">
+    <a href="{{ route('home') }}" class="d-flex align-items-center mb-3 mb-md-0 me-md-auto text-white text-decoration-none">
         <img src="icon.png" style="width: 35px" class="me-4" alt="">
         <span class="fs-4">{{ config('app.name') }}</span>
     </a>
     <hr>
     <ul class="nav nav-pills flex-column mb-auto">
         <li class="nav-item">
-            <a href="#" class="nav-link active" aria-current="page">
+            <a href="{{ route('home') }}" class="nav-link active" aria-current="page">
                 <i class="fa-solid fa-home me-2" style="width: 40px;"></i>
                 Acceuil
             </a>
