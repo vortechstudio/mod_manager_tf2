@@ -20,7 +20,6 @@ class NativeAppServiceProvider implements ProvidesPhpIni
             ->label('Mod TF2 Status: OK');*/
 
         Menu::new()
-            ->appMenu()
             ->register();
         Window::open()
             ->width(1280)
