@@ -2,6 +2,7 @@
 
 namespace App\Providers;
 
+use Native\Laravel\Facades\MenuBar;
 use Native\Laravel\Facades\Window;
 use Native\Laravel\Contracts\ProvidesPhpIni;
 
@@ -13,7 +14,11 @@ class NativeAppServiceProvider implements ProvidesPhpIni
      */
     public function boot(): void
     {
-        Window::open();
+        /*MenuBar::create()
+            ->label('Mod TF2 Status: OK');*/
+        Window::open()
+            ->width(1280)
+            ->height(768);
     }
 
     /**
