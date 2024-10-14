@@ -12,25 +12,25 @@
             </a>
         </li>
         <li>
-            <a href="#" wire:navigate class="nav-link d-flex align-items-center gap-1 {{ Route::currentRouteName() == 'newmod' ? 'active' : 'text-white' }}">
+            <a href="#" wire:navigate class="nav-link d-flex align-items-center gap-1 text-secondary disabled">
                 <iconify-icon icon="line-md:folder-plus-twotone" width="24" height="24"></iconify-icon>
                 Nouveau Mod
             </a>
         </li>
         <li>
-            <a href="#" wire:navigate class="nav-link d-flex align-items-center gap-1 {{ Route::currentRouteName() == 'editmod' ? 'active' : 'text-white' }}">
+            <a href="#" wire:navigate class="nav-link d-flex align-items-center gap-1 text-secondary disabled">
                 <iconify-icon icon="line-md:edit-full-twotone" width="24" height="24"></iconify-icon>
                 Editer un Mod
             </a>
         </li>
         <li>
-            <a href="#" wire:navigate class="nav-link d-flex align-items-center gap-1 {{ Route::currentRouteName() == 'convert.tga' ? 'active' : 'text-white' }}">
+            <a href="#" wire:navigate class="nav-link d-flex align-items-center gap-1 text-secondary disabled">
                 <iconify-icon icon="line-md:image-twotone" width="24" height="24"></iconify-icon>
                 Convertisseur TGA/DDS
             </a>
         </li>
         <li>
-            <a href="#" wire:navigate class="nav-link d-flex align-items-center gap-1 {{ Route::currentRouteName() == 'verification' ? 'active' : 'text-white' }}">
+            <a href="#" wire:navigate class="nav-link d-flex align-items-center gap-1 text-secondary disabled">
                 <iconify-icon icon="line-md:check-list-3-twotone" width="24" height="24"></iconify-icon>
                 Vérificateurs
             </a>
@@ -40,7 +40,7 @@
     <div class="d-flex flex-row justify-content-between">
         <div>
             <span>Version:</span>
-            <span>0.0.1</span>
+            <span>{{ config('nativephp.version') }}</span>
         </div>
         <div class="d-flex gap-2">
             <a href="{{ route('config') }}" class="{{ Route::currentRouteName() == 'config' ? 'active' : 'text-white' }} "><iconify-icon icon="line-md:cog-loop" width="24" height="24"></iconify-icon> </a>
