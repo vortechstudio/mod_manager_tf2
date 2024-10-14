@@ -13,11 +13,7 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/', function () {
-    return view('welcome');
-})->name('home');
+Route::get('/', \App\Livewire\Core\Welcome::class)->name('home');
 
-
+Route::get('/config', \App\Livewire\Core\Setting::class)->name('config');
 Route::get('/core', [\App\Http\Controllers\CoreController::class, 'index'])->name('core');
-Route::get('/config', [\App\Http\Controllers\ConfigController::class, 'index'])->name('config');
-Route::post('/config', [\App\Http\Controllers\ConfigController::class, 'update'])->name('config.update');

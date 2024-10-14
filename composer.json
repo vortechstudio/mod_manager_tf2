@@ -13,6 +13,7 @@
         "laravel/prompts": "*",
         "laravel/sanctum": "^3.3",
         "laravel/tinker": "^2.8",
+        "livewire/livewire": "^3.5",
         "nativephp/electron": "^0.7.3",
         "salahhusa9/laravel-updater": "^1.0",
         "vstudio/versionbuildaction": "^1.1"
@@ -51,6 +52,14 @@
         ],
         "post-create-project-cmd": [
             "@php artisan key:generate --ansi"
+        ],
+        "build": [
+            "composer update",
+            "@php artisan native:build win",
+            "@php artisan native:publish"
+        ],
+        "start": [
+            "@php artisan native:serve"
         ]
     },
     "extra": {
