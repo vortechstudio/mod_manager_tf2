@@ -12,25 +12,33 @@ class Setting extends Component
 
     public function mount()
     {
-        $this->tempPath = Config::where('name', 'temp_path')->first()->value;
-        $this->stagingPath = Config::where('name', 'staging_path')->first()->value;
+        try {
+            $this->tempPath = Config::where('name', 'temp_path')->firstOrFail()->value;
+            $this->stagingPath = Config::where('name', 'staging_path')->firstOrFail()->value;
+        } catch (\Exception $e) {
+            flash()->error($e->getMessage());
+        }
     }
 
     public function save()
     {
         try {
-            Config::where('name', 'temp_path')->first()
-                ->update([
-                    'value' => $this->tempPath
-                ]);
+            $tempConfig = Config::where('name', 'temp_path')->first();
+            $stagingConfig = Config::where('name', 'staging_path')->first();
 
-            Config::where('name', 'staging_path')->first()
-                ->update([
-                    'value' => $this->stagingPath
-                ]);
-            $this->dispatch('showToast', 'success', 'Configuration terminer !');
-        }catch (\Exception $exception) {
-            $this->dispatch('showToast', 'danger', $exception->getMessage());
+            if ($tempConfig && $stagingConfig) {
+                $tempConfig->value = $this->tempPath;
+                $tempConfig->save();
+
+                $stagingConfig->value = $this->stagingPath;
+                $stagingConfig->save();
+
+                flash()->addSuccess("Configuration Terminer !");
+            } else {
+                throw new \Exception('Error system');
+            }
+        } catch (\Exception $exception) {
+            flash()->addError($exception->getMessage());
         }
     }
 
