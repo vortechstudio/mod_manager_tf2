@@ -13,6 +13,7 @@
             @include('includes.sidebar')
             {{ $slot }}
         </div>
+        <livewire:core.toast />
         @livewireScripts
     </body>
 </html>
