@@ -28,7 +28,7 @@ jobs:
         run: npm run build -- --mac
 
       - name: Upload macOS artifact
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v4
         with:
           name: Mod Manager TF2 macOS
           path: dist/
@@ -54,7 +54,7 @@ jobs:
         run: npm run build -- --linux
 
       - name: Upload Linux artifact
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v4
         with:
           name: Mod Manager TF2 Linux
           path: dist/
