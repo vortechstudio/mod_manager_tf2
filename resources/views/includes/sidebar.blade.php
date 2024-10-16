@@ -44,8 +44,10 @@
             <span>{{ config('nativephp.version') }}</span>
         </div>
         <div class="d-flex gap-2">
+            <a href="" class="text-white" data-bs-toggle="offcanvas" data-bs-target="#quickGuideDrawer" aria-controls="quickGuideDrawer"><iconify-icon icon="line-md:compass-loop" width="24" height="24"></iconify-icon></a>
             <a href="{{ route('config') }}" class="{{ Route::currentRouteName() == 'config' ? 'active' : 'text-white' }} "><iconify-icon icon="line-md:cog-loop" width="24" height="24"></iconify-icon> </a>
             <a href="{{ route('core', ['action' => 'close']) }}" class="{{ Route::currentRouteName() == 'core' ? 'active' : 'text-white' }}"><iconify-icon icon="line-md:logout" width="24" height="24"></iconify-icon> </a>
         </div>
     </div>
 </div>
+@include('includes.quickguide')

@@ -10,6 +10,14 @@
                 <label for="stagingPath" class="form-label">Dossier Staging Area</label>
                 <input type="text" class="form-control" id="stagingPath" wire:model="stagingPath" placeholder="Dossier Staging Area">
             </div>
+            <div class="mb-3">
+                <label for="modIoId" class="form-label">Identifiant Mod.io</label>
+                <input type="text" class="form-control" id="modIoId" wire:model="modIoId" placeholder="Votre identifiant de publiant mod.io">
+            </div>
+            <div class="mb-3">
+                <label for="steamId" class="form-label">Identifiant Steam</label>
+                <input type="text" class="form-control" id="steamId" wire:model="steamId" placeholder="Votre identifiant sur Steam">
+            </div>
             <div class="d-flex flex-end">
                 <button type="submit" class="btn btn-success">Valider</button>
             </div>

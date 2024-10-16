@@ -191,6 +191,7 @@ end
 
         // Créer le fichier mod.lua
         File::put($modDirectory . '/mod.lua', $luaContent);
+        File::put($modDirectory . '/version.txt', '');
 
         // Traduire automatiquement les éléments pour le fichier strings.lua
         $translatedDescriptionFR = $this->translateText($validatedData['descMod'], 'fr');
