@@ -1,4 +1,24 @@
 @import "bootstrap/scss/bootstrap";
+@import "sass-material-colors/sass/sass-material-colors-classes";
+
+
+// Boucle pour générer les classes de hauteur
+@for $i from 5 through 500 {
+    @if $i % 10 == 0 {
+        .h-#{$i} {
+            height: #{$i}px;
+        }
+    }
+}
+
+// Boucle pour générer les classes de largeur
+@for $i from 5 through 500 {
+    @if $i % 10 == 0 {
+        .w-#{$i} {
+            width: #{$i}px;
+        }
+    }
+}
 
 body {
     width: auto;
