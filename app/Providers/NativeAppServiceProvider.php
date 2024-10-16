@@ -23,11 +23,7 @@ class NativeAppServiceProvider implements ProvidesPhpIni
             ->register();
         Window::open()
             ->width(1280)
-            ->height(768);
-
-        Notification::title('Hello from NativePHP')
-            ->message('This is a detail message coming from your Laravel app.')
-            ->show();
+            ->height(720);
     }
 
     /**
