@@ -11,14 +11,19 @@ class Setting extends Component
     public string $tempPath = '';
     public string $stagingPath = '';
 
+    public string $modIoId = '';
+    public string $steamId = '';
+
     public function mount()
     {
         try {
             $config = $this->readConfig();
             $this->tempPath = $config['temp_path'];
             $this->stagingPath = $config['staging_path'];
+            $this->modIoId = $config['mod_io_id'];
+            $this->steamId = $config['steam_id'];
         } catch (\Exception $e) {
-            flash()->error($e->getMessage());
+            flash()->addError($e->getMessage());
         }
     }
 
@@ -28,6 +33,8 @@ class Setting extends Component
             $config = [
                 'temp_path' => $this->tempPath,
                 'staging_path' => $this->stagingPath,
+                'mod_io_id' => $this->modIoId,
+                'steam_id' => $this->steamId,
             ];
 
             $this->writeConfig($config);
@@ -48,6 +55,8 @@ class Setting extends Component
         return [
             'temp_path' => '',
             'staging_path' => '',
+            'mod_io_id' => '',
+           'steam_id' => '',
         ];
     }
 
