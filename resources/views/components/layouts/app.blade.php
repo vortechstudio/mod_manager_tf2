@@ -9,7 +9,7 @@
         @livewireStyles
     </head>
     <body style="background-image: url('/images/background/{{ rand(0,2) }}.jpg'); background-repeat: no-repeat; background-position: center; background-size: cover;">
-        <div class="d-flex">
+        <div class="d-flex ">
             @include('includes.sidebar')
             {{ $slot }}
         </div>

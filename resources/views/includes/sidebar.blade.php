@@ -1,4 +1,4 @@
-<div class="d-flex flex-column flex-shrink-0 p-3 text-bg-dark" style="width: 320px; height: 768px">
+<div class="sidebar border border-left position-sticky sticky-top d-flex flex-column flex-shrink-0 p-3 text-bg-dark" style="width: 320px; height: 690px">
     <a href="{{ route('home') }}" class="d-flex align-items-center mb-3 mb-md-0 me-md-auto text-white text-decoration-none">
         <img src="icon.png" style="width: 35px" class="me-4" alt="">
         <span class="fs-4">{{ config('app.name') }}</span>
@@ -12,9 +12,10 @@
             </a>
         </li>
         <li>
-            <a href="#" wire:navigate class="nav-link d-flex align-items-center gap-1 text-secondary disabled">
+            <a href="{{ route('newmod') }}" wire:navigate class="nav-link d-flex align-items-center gap-1 {{ Route::currentRouteName() == 'newmod' ? 'active' : 'text-white' }}">
                 <iconify-icon icon="line-md:folder-plus-twotone" width="24" height="24"></iconify-icon>
                 Nouveau Mod
+                <span class="badge bg-warning">Béta</span>
             </a>
         </li>
         <li>
