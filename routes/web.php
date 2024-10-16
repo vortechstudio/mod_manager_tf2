@@ -16,4 +16,5 @@ use Illuminate\Support\Facades\Route;
 Route::get('/', \App\Livewire\Core\Welcome::class)->name('home');
 
 Route::get('/config', \App\Livewire\Core\Setting::class)->name('config');
+Route::get('/newmod', \App\Livewire\NewMod::class)->name('newmod');
 Route::get('/core', [\App\Http\Controllers\CoreController::class, 'index'])->name('core');
