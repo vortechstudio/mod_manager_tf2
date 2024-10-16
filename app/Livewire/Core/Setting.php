@@ -31,9 +31,9 @@ class Setting extends Component
             ];
 
             $this->writeConfig($config);
-            flash()->success('Configuration sauvegardée avec succès');
+            flash()->addSuccess('Configuration sauvegardée avec succès');
         }catch (\Exception $e) {
-            flash()->error($e->getMessage());
+            flash()->addError($e->getMessage());
         }
     }
 
