@@ -2,6 +2,7 @@
 
 namespace App\Livewire\Core;
 
+use App\Services\BinaryService;
 use App\Services\SteamWorkshop;
 use Illuminate\Support\Facades\File;
 use Livewire\Component;
@@ -16,6 +17,7 @@ class Welcome extends Component
         $this->modStats['modified'] = $this->getModCount('modified');
         $this->modStats['validated'] = $this->getModCount('validated');
         $this->modStats['total'] = $this->getModCount('total');
+        $this->checkDependencies();
     }
 
     private function readConfig()
@@ -57,6 +59,19 @@ class Welcome extends Component
             case 'total':
                 return 0;
 
+        }
+    }
+
+    public function checkDependencies()
+    {
+        if(!(new BinaryService)->checkImageMagick()) {
+            flash()->addInfo('Aucune installation de ImageMagick trouvée. Téléchargement en cours...');
+            (new BinaryService)->installImageMagick();
+        }
+
+        if(!(new BinaryService)->checkModValidator()) {
+            flash()->addInfo('Aucune installation de Mod Validator trouvée. Téléchargement en cours...');
+            (new BinaryService)->installModValidator();
         }
     }
 
