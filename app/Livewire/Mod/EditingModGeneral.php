@@ -3,6 +3,7 @@
 namespace App\Livewire\Mod;
 
 use App\Helpers\ParsingStringLua;
+use App\Helpers\Translation;
 use File;
 use Livewire\Component;
 
@@ -134,30 +135,82 @@ class EditingModGeneral extends Component
      */
     public function saveGeneralInfo()
     {
-        // Reconstruire le fichier mod.lua
-        $modLuaContent = "name = '{$this->modData['name']}',\n";
-        $modLuaContent .= "description = '{$this->modData['description']}',\n";
+        // Charger les données existantes de mod.lua
+        $currentModData = $this->parseModLua($this->modPath . '/mod.lua');
 
-        // Ajouter les auteurs
-        $modLuaContent .= "authors = {\n";
-        foreach ($this->modData['authors'] as $author) {
-            $modLuaContent .= "    { name = '{$author['name']}', role = '{$author['role']}' },\n";
+        // Charger les données existantes de strings.lua
+        $stringsFilePath = $this->modPath . '/strings.lua';
+        $translations = (new Translation(filePath: $stringsFilePath))->getAllTranslations();
+
+        // Initialiser le contenu à sauvegarder
+        $modLuaContent = "function data()\n    return {\n";
+        $modLuaContent .= "        info = {\n";
+
+        // Vérifier et sauvegarder le nom du mod en utilisant une clé de traduction
+        if ($this->modData['name'] !== $currentModData['name']) {
+            $translations['mod_name'] = $this->modData['name'];
         }
-        $modLuaContent .= "},\n";
+        $modLuaContent .= "            name = _('mod_name'),\n";
 
-        // Ajouter les tags
-        $modLuaContent .= "tags = {";
-        $tagsArray = array_map('trim', explode(',', $this->tags));
-        foreach ($tagsArray as $tag) {
+        // Vérifier et sauvegarder la description du mod en utilisant une clé de traduction
+        if ($this->modData['description'] !== $currentModData['description']) {
+            $translations['mod_description'] = $this->modData['description'];
+        }
+        $modLuaContent .= "            description = _('mod_description'),\n";
+
+        // Vérifier et sauvegarder les auteurs (si modifiés)
+        $modLuaContent .= "            authors = {\n";
+        foreach ($this->modData['authors'] as $author) {
+            $modLuaContent .= "                { name = '" . $author['name'] . "', role = '" . $author['role'] . "' },\n";
+        }
+        $modLuaContent .= "            },\n";
+
+        // Vérifier et sauvegarder les tags
+        $modLuaContent .= "            tags = {";
+        foreach (array_map('trim', explode(',', $this->tags)) as $tag) {
             $modLuaContent .= "'$tag', ";
         }
         $modLuaContent .= "},\n";
 
+        // Sauvegarder severityAdd et severityRemove
+        $modLuaContent .= "            severityAdd = " . $this->modData['severityAdd'] . ",\n";
+        $modLuaContent .= "            severityRemove = " . $this->modData['severityRemove'] . ",\n";
+
+        // Ajouter la version mineure
+        $modLuaContent .= "            minorVersion = 1,\n";
+        $modLuaContent .= "            visible = true,\n";
+
+        // Fermer la section info
+        $modLuaContent .= "        }\n    }\nend\n";
+
         // Sauvegarder dans le fichier mod.lua
         File::put($this->modPath . '/mod.lua', $modLuaContent);
 
+        // Sauvegarder les traductions dans strings.lua
+        $this->saveTranslations($translations);
+
         session()->flash('message', 'Informations générales sauvegardées avec succès.');
     }
+
+    /**
+ * Fonction pour sauvegarder les traductions dans strings.lua
+ */
+    private function saveTranslations($translations)
+    {
+        $translationsContent = "return {\n";
+        foreach ($translations as $lang => $trans) {
+            $translationsContent .= "    $lang = {\n";
+            foreach ($trans as $key => $value) {
+                $translationsContent .= "        $key = '" . addslashes($value) . "',\n";
+            }
+            $translationsContent .= "    },\n";
+        }
+        $translationsContent .= "};";
+
+        // Sauvegarder dans le fichier strings.lua
+        File::put($this->modPath . '/strings.lua', $translationsContent);
+    }
+
 
     public function render()
     {

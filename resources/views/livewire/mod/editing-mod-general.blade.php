@@ -77,7 +77,7 @@
     <div class="card">
         <div class="card-body">
             <h3 class="card-title">Edition des informations du mod</h3>
-            <form wire:submit='editing'>
+            <form wire:submit='saveGeneralInfo'>
                 <div class="mb-3">
                     <label for="nameMod" class="form-label">Nom du Mod</label>
                     <input type="text" id="nameMod" class="form-control" wire:model.live="modData.name">
@@ -125,6 +125,17 @@
                         @endforeach
                     </div>
                     <button type="button" wire:click="addAuthor" class="btn btn-primary">Ajouter un auteur</button>
+                </div>
+                <div class="d-flex justify-content-end gap-2">
+                    <button type="submit" class="btn btn-primary">
+                        <span wire:loading.remove>Enregistrer</span>
+                        <span wire:loading>
+                            <div class="spinner-grow" role="status">
+                              <span class="visually-hidden">Loading...</span>
+                            </div>
+                        </span>
+                    </button>
+                    <button type="reset" class="btn btn-secondary">Annuler</button>
                 </div>
             </form>
         </div>
