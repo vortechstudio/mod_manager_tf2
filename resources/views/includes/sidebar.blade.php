@@ -19,9 +19,10 @@
             </a>
         </li>
         <li>
-            <a href="#" wire:navigate class="nav-link d-flex align-items-center gap-1 text-secondary disabled">
+            <a href="{{ route('mod.select') }}" wire:navigate class="nav-link d-flex align-items-center gap-1 {{ Route::currentRouteName() == 'newmod' ? 'active' : 'text-white' }}">
                 <iconify-icon icon="line-md:edit-full-twotone" width="24" height="24"></iconify-icon>
                 Editer un Mod
+                <span class="badge bg-warning">Béta</span>
             </a>
         </li>
         <li>
