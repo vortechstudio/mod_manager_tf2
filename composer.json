@@ -59,6 +59,14 @@
             "@php artisan native:build win",
             "@php artisan native:publish"
         ],
+        "build:mac": [
+            "composer update",
+            "@php artisan native:build mac"
+        ],
+        "build:linux": [
+            "composer update",
+            "@php artisan native:build linux"
+        ],
         "start": [
             "@php artisan native:serve"
         ]
