@@ -24,3 +24,9 @@ body {
     width: auto;
     height: 100%;
 }
+
+.separator {
+    display: block;
+    height: 0;
+    border-bottom: 1px solid #fff;
+}
