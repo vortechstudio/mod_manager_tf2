@@ -2,6 +2,7 @@
 
 namespace App\Livewire\Mod;
 
+use App\Helpers\ParsingStringLua;
 use File;
 use Livewire\Component;
 
@@ -36,7 +37,8 @@ class EditingMod extends Component
         $modData = [];
         // Extraire le nom
         if (preg_match("/name\s*=\s*_\('([^']+)'\)/", $luaContent, $matches)) {
-            $modData['name'] = $matches[1];
+            $translation = (new ParsingStringLua($this->modPath.DIRECTORY_SEPARATOR.'strings.lua', 'fr'))->getTranslation($matches[1]);
+            $modData['name'] = $translation;
         }else {
             session()->flash('message', 'Impossible de trouver le nom dans mod.lua.');
         }

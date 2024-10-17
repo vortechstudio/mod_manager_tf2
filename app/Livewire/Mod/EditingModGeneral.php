@@ -171,14 +171,57 @@ class EditingModGeneral extends Component
         }
     }
 
+
+
+    /**
+     * Creates a workshop preview image by converting an existing TGA image to JPG format.//+
+     *
+     * This function checks for the existence of 'image_00.tga' in the mod path,//+
+     * converts it to 'workshop_preview.jpg' using the ImageMagick 'convert' command,//+
+     * and provides feedback on the success or failure of the operation.//+
+     *
+     * @return void
+     **/
     public function createWorkshopPreview()
     {
+        $inputFile = $this->modPath .DIRECTORY_SEPARATOR. 'image_00.tga';
+        $outputFile = $this->modPath . DIRECTORY_SEPARATOR. 'workshop_preview.jpg';
 
+        if (File::exists($inputFile)) {
+            $command = "magick convert $inputFile $outputFile";
+            exec($command);
+
+            // Vérifier si la conversion a réussi
+            if (File::exists($outputFile)) {
+                flash()->addSuccess("Image créée avec succès.");
+                $this->workshopPreviewExists = true;
+            } else {
+                flash()->addError("Erreur lors de la création de l'image.");
+            }
+        } else {
+            flash()->addError("Image introuvable.");
+        }
     }
 
     public function createModIoPreview()
     {
+        $inputFile = $this->modPath . DIRECTORY_SEPARATOR. 'image_00.tga';
+        $outputFile = $this->modPath . DIRECTORY_SEPARATOR.'modio_preview.jpg';
 
+        if (File::exists($inputFile)) {
+            $command = "magick convert $inputFile $outputFile";
+            exec($command);
+
+            // Vérifier si la conversion a réussi
+            if (File::exists($outputFile)) {
+                flash()->addSuccess("Image créée avec succès.");
+                $this->modioPreviewExists = true;
+            } else {
+                flash()->addError("Erreur lors de la création de l'image.");
+            }
+        } else {
+            flash()->addError("Image introuvable.");
+        }
     }
 
     private function checkFiles()

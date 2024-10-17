@@ -41,6 +41,11 @@
                                     <iconify-icon icon="line-md:close-circle" width="24" height="24"  style="color: #ff0000"></iconify-icon>
                                     <button class="btn btn-sm btn-info" wire:click="createWorkshopPreview">
                                         <span wire:loading.remove>Créer</span>
+                                        <span wire:loading>
+                                            <div class="spinner-grow" role="status">
+                                              <span class="visually-hidden">Loading...</span>
+                                            </div>
+                                        </span>
                                     </button>
                                 </div>
                             @endif
@@ -53,7 +58,14 @@
                             @else
                                 <div class="d-flex align-items-center gap-1">
                                     <iconify-icon icon="line-md:close-circle" width="24" height="24"  style="color: #ff0000"></iconify-icon>
-                                    <button class="btn btn-sm btn-info" wire:click="createModIoPreview">Créer</button>
+                                    <button class="btn btn-sm btn-info" wire:click="createModIoPreview">
+                                        <span wire:loading.remove>Créer</span>
+                                        <span wire:loading>
+                                            <div class="spinner-grow" role="status">
+                                              <span class="visually-hidden">Loading...</span>
+                                            </div>
+                                        </span>
+                                    </button>
                                 </div>
                             @endif
                         </div>
