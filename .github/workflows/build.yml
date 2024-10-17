@@ -16,16 +16,16 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Set up Node.js
-        uses: actions/setup-node@v4
+      # Setup PHP and Composer for NativePHP
+      - name: Set up PHP
+        uses: shivammathur/setup-php@v2
         with:
-          node-version: '20'
+          php-version: '8.2'  # Version PHP compatible avec NativePHP
 
-      - name: Install dependencies
-        run: npm install
-
-      - name: Build for macOS
-        run: npm run build -- --mac
+      - name: Install Composer
+        run: |
+          composer install
+          composer run build:mac
 
       - name: Upload macOS artifact
         uses: actions/upload-artifact@v4
@@ -42,16 +42,16 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Set up Node.js
-        uses: actions/setup-node@v4
+      # Setup PHP and Composer for NativePHP
+      - name: Set up PHP
+        uses: shivammathur/setup-php@v2
         with:
-          node-version: '20'
+          php-version: '8.2'  # Version PHP compatible avec NativePHP
 
-      - name: Install dependencies
-        run: npm install
-
-      - name: Build for Linux
-        run: npm run build -- --linux
+      - name: Install Composer
+        run: |
+          composer install
+          composer run build:linux
 
       - name: Upload Linux artifact
         uses: actions/upload-artifact@v4
