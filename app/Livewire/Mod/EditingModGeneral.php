@@ -189,7 +189,7 @@ class EditingModGeneral extends Component
         // Sauvegarder les traductions dans strings.lua
         $this->saveTranslations($translations);
 
-        session()->flash('message', 'Informations générales sauvegardées avec succès.');
+        flash()->addSuccess('Informations générales sauvegardées avec succès.');
     }
 
     /**
