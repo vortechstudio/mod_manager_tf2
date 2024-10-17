@@ -8,16 +8,20 @@ use Livewire\Component;
 
 class EditingMod extends Component
 {
-    public $modPath = '';
+    public $modPath = null;
     public $modData = [];
 
     public function mount($modPath)
     {
-        \File::put($this->modPath.DIRECTORY_SEPARATOR.'version.txt', '');
-        try {
-            \File::copyDirectory($this->modPath, public_path('temp'.DIRECTORY_SEPARATOR.'editingMod'));
-        }catch (\Exception $e) {
-            dd($e->getMessage());
+        if($modPath !== 'editingMod') {
+            File::put($this->modPath.DIRECTORY_SEPARATOR.'version.txt', '');
+            try {
+                File::copyDirectory($this->modPath, public_path('temp'.DIRECTORY_SEPARATOR.'editingMod'));
+            }catch (\Exception $e) {
+                dd($e->getMessage());
+            }
+        } else {
+            flash()->addError('Chemin de mod non valide.');
         }
         $this->modPath = public_path('temp'.DIRECTORY_SEPARATOR.'editingMod');
         $this->modData = $this->parseModLua($this->modPath . '/mod.lua');

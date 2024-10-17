@@ -74,4 +74,19 @@
             </div>
         </div>
     </div>
+    <div class="card">
+        <div class="card-body">
+            <h3 class="card-title">Edition des informations du mod</h3>
+            <form wire:submit='editing'>
+                <div class="mb-3">
+                    <label for="nameMod" class="form-label">Nom du Mod</label>
+                    <input type="text" id="nameMod" class="form-control" wire:model.live="modData.name">
+                </div>
+                <div class="mb-3">
+                    <label for="nameMod" class="form-label">Description du Mod</label>
+                    <textarea id="descMod" class="form-control" wire:model.live="modData.description"></textarea>
+                </div>
+            </form>
+        </div>
+    </div>
 </div>
