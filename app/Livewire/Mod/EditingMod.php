@@ -20,8 +20,6 @@ class EditingMod extends Component
             }catch (\Exception $e) {
                 dd($e->getMessage());
             }
-        } else {
-            flash()->addError('Chemin de mod non valide.');
         }
         $this->modPath = public_path('temp'.DIRECTORY_SEPARATOR.'editingMod');
         $this->modData = $this->parseModLua($this->modPath . '/mod.lua');

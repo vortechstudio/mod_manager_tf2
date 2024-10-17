@@ -1,5 +1,5 @@
 <div>
-    <div class="card">
+    <div class="card mb-2">
         <div class="card-body">
             <h2 class="card-title">Statistiques du mod</h2>
             <div class="row">
@@ -85,6 +85,46 @@
                 <div class="mb-3">
                     <label for="nameMod" class="form-label">Description du Mod</label>
                     <textarea id="descMod" class="form-control" wire:model.live="modData.description"></textarea>
+                </div>
+                <div class="mb-3">
+                    <label for="tagsMod" class="form-label">Tags du Mod</label>
+                    <input type="text" id="tagsMod" class="form-control" wire:model.live="modData.tags">
+                </div>
+                <div class="row mb-3">
+                    <div class="col">
+                        <label for="modSeverityAdd" class="form-label">Sévérité à l'ajout</label>
+                        <select id="modSeverityAdd" wire:model.live='modData.severityAdd' class="form-control">
+                            <option value="NONE">NONE</option>
+                            <option value="WARNING">WARNING</option>
+                            <option value="CRITICAL">CRITICAL</option>
+                        </select>
+                    </div>
+                    <div class="col">
+                        <label for="modSeverityRemove" class="form-label">Sévérité à la suppression</label>
+                        <select id="modSeverityRemove" wire:model.live='modData.severityRemove' class="form-control">
+                            <option value="NONE">NONE</option>
+                            <option value="WARNING">WARNING</option>
+                            <option value="CRITICAL">CRITICAL</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="form-group mb-3">
+                    <label for="authors" class="form-label">Auteurs</label>
+                    <div class="d-flex flex-column">
+                        @foreach ($modData['authors'] ?? [] as $i => $author)
+                        <div class="d-flex justify-content-between align-items-center gap-1 mb-1">
+                            <input type="text" wire:model='modData.authors.{{ $i}}.name' class="form-control">
+                            <select wire:model="modData.authors.{{ $i }}.role" class="form-control">
+                                <option value="CREATOR">Créateur</option>
+                                <option value="CONTRIBUTOR">Contributeur</option>
+                            </select>
+                            <button type="button" wire:click="removeAuthor({{ $i }})" class="btn btn-sm btn-danger">
+                                <iconify-icon icon="line-md:remove" width="24" height="24"></iconify-icon>
+                            </button>
+                        </div>
+                        @endforeach
+                    </div>
+                    <button type="button" wire:click="addAuthor" class="btn btn-primary">Ajouter un auteur</button>
                 </div>
             </form>
         </div>

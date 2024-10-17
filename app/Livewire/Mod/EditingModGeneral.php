@@ -66,16 +66,25 @@ class EditingModGeneral extends Component
             flash()->addError('Impossible de trouver la description dans mod.lua.');
         }
 
-        // Extraire les auteurs
         if (preg_match("/authors\s*=\s*\[([^\]]+)\]/s", $luaContent, $matches)) {
-            $authorsJson = $matches[1];  // Contenu JSON à décoder
+            $authorsLua = $matches[1];
 
-            // Décoder le JSON en PHP
-            $authorsJson = str_replace(["\n", "\t", "{", "}"], '', $authorsJson);  // Nettoyer le format JSON
-            $authorsArray = json_decode('[' . trim($authorsJson) . ']', true);  // Convertir en tableau associatif
+            // Initialisation du tableau des auteurs
+            $authorsArray = [];
 
+            // Extraire chaque bloc d'auteur (nom et rôle)
+            if (preg_match_all("/\"name\":\s*\"([^\"]+)\",\s*\"role\":\s*\"([^\"]+)\"/", $authorsLua, $authorMatches, PREG_SET_ORDER)) {
+                foreach ($authorMatches as $authorMatch) {
+                    $authorsArray[] = [
+                        'name' => $authorMatch[1],
+                        'role' => $authorMatch[2],
+                    ];
+                }
+            }
+
+            // Stocker les auteurs extraits dans modData
             $modData['authors'] = $authorsArray;
-        }else {
+        } else {
             session()->flash('message', 'Impossible de trouver les auteurs dans mod.lua.');
         }
 
@@ -88,14 +97,14 @@ class EditingModGeneral extends Component
             session()->flash('message', 'Impossible de trouver les tags dans mod.lua.');
         }
 
-        if (preg_match("/severityAdd\s*=\s*_\('([^']+)'\)/", $luaContent, $matches)) {
+        if (preg_match("/severityAdd\s*=\s*([A-Z]+)/", $luaContent, $matches)) {
             $modData['severityAdd'] = $matches[1];
         }else {
             session()->flash('message', 'Impossible de trouver le nom dans mod.lua.');
         }
 
-        if (preg_match("/severityRemove\s*=\s*_\('([^']+)'\)/", $luaContent, $matches)) {
-            $modData['severityAdd'] = $matches[1];
+        if (preg_match("/severityRemove\s*=\s*([A-Z]+)/", $luaContent, $matches)) {
+            $modData['severityRemove'] = $matches[1];
         }else {
             session()->flash('message', 'Impossible de trouver le nom dans mod.lua.');
         }
@@ -152,6 +161,7 @@ class EditingModGeneral extends Component
 
     public function render()
     {
+        //dd($this->modData);
         return view('livewire.mod.editing-mod-general');
     }
 
