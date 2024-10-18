@@ -21,3 +21,4 @@ yarn-error.log
 /.vscode
 /composer.phar
 /dist
+/public/tf2_modvalidator_report.html

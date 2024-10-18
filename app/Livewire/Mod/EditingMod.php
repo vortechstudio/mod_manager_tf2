@@ -2,28 +2,43 @@
 
 namespace App\Livewire\Mod;
 
+use App\Helpers\ParsingStringLua;
 use File;
 use Livewire\Component;
 
 class EditingMod extends Component
 {
-    public $modPath = '';
+    public $modPath = null;
     public $modData = [];
+
+    public string $tempPath = '';
 
     public function mount($modPath)
     {
-        \File::put($this->modPath.DIRECTORY_SEPARATOR.'version.txt', '');
-        try {
-            \File::copyDirectory($this->modPath, public_path('temp'.DIRECTORY_SEPARATOR.'editingMod'));
-        }catch (\Exception $e) {
-            dd($e->getMessage());
+        if($modPath !== 'editingMod') {
+            File::put($this->modPath.DIRECTORY_SEPARATOR.'version.txt', '');
+            try {
+                File::copyDirectory($this->modPath, public_path('temp'.DIRECTORY_SEPARATOR.'editingMod'));
+            }catch (\Exception $e) {
+                dd($e->getMessage());
+            }
         }
         $this->modPath = public_path('temp'.DIRECTORY_SEPARATOR.'editingMod');
         $this->modData = $this->parseModLua($this->modPath . '/mod.lua');
+        $this->tempPath = $this->readConfig()['temp_path'];
     }
-    public function render()
+
+    private function readConfig()
     {
-        return view('livewire.mod.editing-mod', ['mod' => $this->modData, 'modPath' => $this->modPath]);
+        $configPath = base_path('config/config.json');
+        if (File::exists($configPath)) {
+            return json_decode(File::get($configPath), true);
+        }
+
+        // Return empty values if config file does not exist
+        return [
+            'temp_path' => '',
+        ];
     }
 
     private function parseModLua(string $filePath)
@@ -36,7 +51,8 @@ class EditingMod extends Component
         $modData = [];
         // Extraire le nom
         if (preg_match("/name\s*=\s*_\('([^']+)'\)/", $luaContent, $matches)) {
-            $modData['name'] = $matches[1];
+            $translation = (new ParsingStringLua($this->modPath.DIRECTORY_SEPARATOR.'strings.lua', 'fr'))->getTranslation($matches[1]);
+            $modData['name'] = $translation;
         }else {
             session()->flash('message', 'Impossible de trouver le nom dans mod.lua.');
         }
@@ -108,5 +124,32 @@ class EditingMod extends Component
         // Supprimer les espaces et les quotes puis découper en tableau
         $tags = array_map('trim', explode(',', str_replace("'", '', $tagsString)));
         return $tags;
+    }
+
+    public function terminateEditing()
+    {
+        if(!File::exists($this->modPath)) {
+            flash()->addError('Le dossier temporaire pour l\'édition du mod n\'existe pas.');
+        }
+
+        try {
+            File::copyDirectory($this->modPath, $this->tempPath);
+            $versionFilePath = $this->tempPath.DIRECTORY_SEPARATOR.'version.txt';
+            if (File::exists($versionFilePath)) {
+                File::delete($versionFilePath);
+            }
+
+            File::deleteDirectory($this->modPath);
+
+            flash()->addSuccess('Édition du mod terminée avec succès.');
+            return redirect()->route('mod.select');
+        }catch(\Exception $e) {
+            flash()->addError($e->getMessage());
+        }
+    }
+
+    public function render()
+    {
+        return view('livewire.mod.editing-mod', ['mod' => $this->modData, 'modPath' => $this->modPath]);
     }
 }

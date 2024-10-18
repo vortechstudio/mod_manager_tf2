@@ -16,6 +16,7 @@
         "livewire/livewire": "^3.5",
         "nativephp/electron": "^0.7.3",
         "php-flasher/flasher-laravel": "^1.15",
+        "php-flasher/flasher-sweetalert-laravel": "^1.15",
         "salahhusa9/laravel-updater": "^1.0",
         "vstudio/versionbuildaction": "^1.1"
     },

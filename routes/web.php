@@ -22,5 +22,5 @@ Route::get('/core/install-dependencies', \App\Livewire\InstallDependency::class)
 
 Route::prefix('mod')->group(function () {
     Route::get('/selectMod', App\Livewire\Mod\SelectMod::class)->name('mod.select');
-    Route::get('/selectMod/{modPath}', App\Livewire\Mod\EditingMod::class)->name('mod.selected');
+    Route::get('/selectMod/{modPath?}', App\Livewire\Mod\EditingMod::class)->name('mod.selected');
 });
