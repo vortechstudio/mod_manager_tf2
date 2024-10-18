@@ -4,14 +4,8 @@
             <div class="d-flex justify-content-between align-items-center">
                 <span>{{ $mod['name'] }}</span>
                 <div class="d-flex justify-content-end align-items-center gap-2">
-                    <button wire:click="return" class="btn btn-secondary">
-                        Retour
-                    </button>
-                    <button wire:click="save" class="btn btn-success">
-                        Sauvegarder l'édition
-                    </button>
                     <button wire:click="close" class="btn btn-danger">
-                        Fermer l'édition
+                        Terminer l'édition
                     </button>
                 </div>
             </div>
@@ -60,6 +54,9 @@
                 </div>
                 <div class="tab-pane fade" id="conv" role="tabpanel">
                     <livewire:mod.editing-mod-convert :modPath="$modPath" />
+                </div>
+                <div class="tab-pane fade" id="verif" role="tabpanel">
+                    <livewire:mod.editing-mod-verif :modPath="$modPath" />
                 </div>
             </div>
         </div>
