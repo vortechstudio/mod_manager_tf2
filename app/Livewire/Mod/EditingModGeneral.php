@@ -2,6 +2,8 @@
 
 namespace App\Livewire\Mod;
 
+use App\Helpers\ParsingStringLua;
+use App\Helpers\Translation;
 use File;
 use Livewire\Component;
 
@@ -51,28 +53,39 @@ class EditingModGeneral extends Component
 
         // Extraire le nom
         if (preg_match("/name\s*=\s*_\('([^']+)'\)/", $luaContent, $matches)) {
-            $modData['name'] = $matches[1];
+            $translation = (new ParsingStringLua(filePath: $this->modPath.DIRECTORY_SEPARATOR.'strings.lua', language: 'fr'))->getTranslation($matches[1]);
+            $modData['name'] = $translation;
         }else {
             session()->flash('message', 'Impossible de trouver le nom dans mod.lua.');
         }
 
         // Extraire la description
         if (preg_match("/description\s*=\s*_\('([^']+)'\)/", $luaContent, $matches)) {
-            $modData['description'] = $matches[1];
+            $translation = (new ParsingStringLua(filePath: $this->modPath.DIRECTORY_SEPARATOR.'strings.lua', language:'fr'))->getTranslation($matches[1]);
+            $modData['description'] = $translation;
         }else {
-            session()->flash('message', 'Impossible de trouver la description dans mod.lua.');
+            flash()->addError('Impossible de trouver la description dans mod.lua.');
         }
 
-        // Extraire les auteurs
         if (preg_match("/authors\s*=\s*\[([^\]]+)\]/s", $luaContent, $matches)) {
-            $authorsJson = $matches[1];  // Contenu JSON à décoder
+            $authorsLua = $matches[1];
 
-            // Décoder le JSON en PHP
-            $authorsJson = str_replace(["\n", "\t", "{", "}"], '', $authorsJson);  // Nettoyer le format JSON
-            $authorsArray = json_decode('[' . trim($authorsJson) . ']', true);  // Convertir en tableau associatif
+            // Initialisation du tableau des auteurs
+            $authorsArray = [];
 
+            // Extraire chaque bloc d'auteur (nom et rôle)
+            if (preg_match_all("/\"name\":\s*\"([^\"]+)\",\s*\"role\":\s*\"([^\"]+)\"/", $authorsLua, $authorMatches, PREG_SET_ORDER)) {
+                foreach ($authorMatches as $authorMatch) {
+                    $authorsArray[] = [
+                        'name' => $authorMatch[1],
+                        'role' => $authorMatch[2],
+                    ];
+                }
+            }
+
+            // Stocker les auteurs extraits dans modData
             $modData['authors'] = $authorsArray;
-        }else {
+        } else {
             session()->flash('message', 'Impossible de trouver les auteurs dans mod.lua.');
         }
 
@@ -85,14 +98,14 @@ class EditingModGeneral extends Component
             session()->flash('message', 'Impossible de trouver les tags dans mod.lua.');
         }
 
-        if (preg_match("/severityAdd\s*=\s*_\('([^']+)'\)/", $luaContent, $matches)) {
+        if (preg_match("/severityAdd\s*=\s*([A-Z]+)/", $luaContent, $matches)) {
             $modData['severityAdd'] = $matches[1];
         }else {
             session()->flash('message', 'Impossible de trouver le nom dans mod.lua.');
         }
 
-        if (preg_match("/severityRemove\s*=\s*_\('([^']+)'\)/", $luaContent, $matches)) {
-            $modData['severityAdd'] = $matches[1];
+        if (preg_match("/severityRemove\s*=\s*([A-Z]+)/", $luaContent, $matches)) {
+            $modData['severityRemove'] = $matches[1];
         }else {
             session()->flash('message', 'Impossible de trouver le nom dans mod.lua.');
         }
@@ -122,33 +135,86 @@ class EditingModGeneral extends Component
      */
     public function saveGeneralInfo()
     {
-        // Reconstruire le fichier mod.lua
-        $modLuaContent = "name = '{$this->modData['name']}',\n";
-        $modLuaContent .= "description = '{$this->modData['description']}',\n";
+        // Charger les données existantes de mod.lua
+        $currentModData = $this->parseModLua($this->modPath . '/mod.lua');
 
-        // Ajouter les auteurs
-        $modLuaContent .= "authors = {\n";
-        foreach ($this->modData['authors'] as $author) {
-            $modLuaContent .= "    { name = '{$author['name']}', role = '{$author['role']}' },\n";
+        // Charger les données existantes de strings.lua
+        $stringsFilePath = $this->modPath . '/strings.lua';
+        $translations = (new Translation(filePath: $stringsFilePath))->getAllTranslations();
+
+        // Initialiser le contenu à sauvegarder
+        $modLuaContent = "function data()\n    return {\n";
+        $modLuaContent .= "        info = {\n";
+
+        // Vérifier et sauvegarder le nom du mod en utilisant une clé de traduction
+        if ($this->modData['name'] !== $currentModData['name']) {
+            $translations['mod_name'] = $this->modData['name'];
         }
-        $modLuaContent .= "},\n";
+        $modLuaContent .= "            name = _('mod_name'),\n";
 
-        // Ajouter les tags
-        $modLuaContent .= "tags = {";
-        $tagsArray = array_map('trim', explode(',', $this->tags));
-        foreach ($tagsArray as $tag) {
+        // Vérifier et sauvegarder la description du mod en utilisant une clé de traduction
+        if ($this->modData['description'] !== $currentModData['description']) {
+            $translations['mod_description'] = $this->modData['description'];
+        }
+        $modLuaContent .= "            description = _('mod_description'),\n";
+
+        // Vérifier et sauvegarder les auteurs (si modifiés)
+        $modLuaContent .= "            authors = {\n";
+        foreach ($this->modData['authors'] as $author) {
+            $modLuaContent .= "                { name = '" . $author['name'] . "', role = '" . $author['role'] . "' },\n";
+        }
+        $modLuaContent .= "            },\n";
+
+        // Vérifier et sauvegarder les tags
+        $modLuaContent .= "            tags = {";
+        foreach (array_map('trim', explode(',', $this->tags)) as $tag) {
             $modLuaContent .= "'$tag', ";
         }
         $modLuaContent .= "},\n";
 
+        // Sauvegarder severityAdd et severityRemove
+        $modLuaContent .= "            severityAdd = " . $this->modData['severityAdd'] . ",\n";
+        $modLuaContent .= "            severityRemove = " . $this->modData['severityRemove'] . ",\n";
+
+        // Ajouter la version mineure
+        $modLuaContent .= "            minorVersion = 1,\n";
+        $modLuaContent .= "            visible = true,\n";
+
+        // Fermer la section info
+        $modLuaContent .= "        }\n    }\nend\n";
+
         // Sauvegarder dans le fichier mod.lua
         File::put($this->modPath . '/mod.lua', $modLuaContent);
 
-        session()->flash('message', 'Informations générales sauvegardées avec succès.');
+        // Sauvegarder les traductions dans strings.lua
+        $this->saveTranslations($translations);
+
+        flash()->addSuccess('Informations générales sauvegardées avec succès.');
     }
+
+    /**
+ * Fonction pour sauvegarder les traductions dans strings.lua
+ */
+    private function saveTranslations($translations)
+    {
+        $translationsContent = "return {\n";
+        foreach ($translations as $lang => $trans) {
+            $translationsContent .= "    $lang = {\n";
+            foreach ($trans as $key => $value) {
+                $translationsContent .= "        $key = '" . addslashes($value) . "',\n";
+            }
+            $translationsContent .= "    },\n";
+        }
+        $translationsContent .= "};";
+
+        // Sauvegarder dans le fichier strings.lua
+        File::put($this->modPath . '/strings.lua', $translationsContent);
+    }
+
 
     public function render()
     {
+        //dd($this->modData);
         return view('livewire.mod.editing-mod-general');
     }
 
@@ -171,14 +237,57 @@ class EditingModGeneral extends Component
         }
     }
 
+
+
+    /**
+     * Creates a workshop preview image by converting an existing TGA image to JPG format.//+
+     *
+     * This function checks for the existence of 'image_00.tga' in the mod path,//+
+     * converts it to 'workshop_preview.jpg' using the ImageMagick 'convert' command,//+
+     * and provides feedback on the success or failure of the operation.//+
+     *
+     * @return void
+     **/
     public function createWorkshopPreview()
     {
+        $inputFile = $this->modPath .DIRECTORY_SEPARATOR. 'image_00.tga';
+        $outputFile = $this->modPath . DIRECTORY_SEPARATOR. 'workshop_preview.jpg';
 
+        if (File::exists($inputFile)) {
+            $command = "magick convert $inputFile $outputFile";
+            exec($command);
+
+            // Vérifier si la conversion a réussi
+            if (File::exists($outputFile)) {
+                flash()->addSuccess("Image créée avec succès.");
+                $this->workshopPreviewExists = true;
+            } else {
+                flash()->addError("Erreur lors de la création de l'image.");
+            }
+        } else {
+            flash()->addError("Image introuvable.");
+        }
     }
 
     public function createModIoPreview()
     {
+        $inputFile = $this->modPath . DIRECTORY_SEPARATOR. 'image_00.tga';
+        $outputFile = $this->modPath . DIRECTORY_SEPARATOR.'modio_preview.jpg';
 
+        if (File::exists($inputFile)) {
+            $command = "magick convert $inputFile $outputFile";
+            exec($command);
+
+            // Vérifier si la conversion a réussi
+            if (File::exists($outputFile)) {
+                flash()->addSuccess("Image créée avec succès.");
+                $this->modioPreviewExists = true;
+            } else {
+                flash()->addError("Erreur lors de la création de l'image.");
+            }
+        } else {
+            flash()->addError("Image introuvable.");
+        }
     }
 
     private function checkFiles()

@@ -14,6 +14,9 @@ class SelectMod extends Component
 
     public function mount()
     {
+        if(File::exists(public_path('temp/editingMod/mod.lua'))) {
+            return redirect()->route('mod.selected', ['modPath' => 'editingMod']);
+        }
         $this->tempPath = $this->readConfig()['temp_path'];
         // Lister uniquement les mods sans 'version.txt' dans le dossier temporaire
         $this->mods = $this->listModsInTemp();

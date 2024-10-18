@@ -204,15 +204,15 @@ end
         $stringsContent = "
         return {
             en = {
-                description = '{$validatedData['descMod']}',
+                mod_description = '{$validatedData['descMod']}',
                 mod_name = '{$validatedData['nameMod']}'
             },
             fr = {
-                description = '{$translatedDescriptionFR}',
+                mod_description = '{$translatedDescriptionFR}',
                 mod_name = '{$translatedModNameFR}'
             },
             de = {
-                description = '{$translatedDescriptionDE}',
+                mod_description = '{$translatedDescriptionDE}',
                 mod_name = '{$translatedModNameDE}'
             }
         };
@@ -237,6 +237,7 @@ end
 
     public function render()
     {
+
         return view('livewire.new-mod');
     }
 }
