@@ -35,12 +35,6 @@
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" data-bs-toggle="tab" href="#editor">
-                                <iconify-icon icon="cib:lua" width="24" height="24"></iconify-icon>
-                                Editeur LUA
-                            </a>
-                        </li>
-                        <li class="nav-item">
                             <a class="nav-link" data-bs-toggle="tab" href="#conv">
                                 <iconify-icon icon="material-symbols:table-convert" width="24" height="24"></iconify-icon>
                                 Convertisseur TGA/DDS
@@ -64,8 +58,8 @@
                 <div class="tab-pane fade" id="traductions" role="tabpanel">
                     <livewire:mod.editing-mod-translate :modPath="$modPath" />
                 </div>
-                <div class="tab-pane fade" id="kt_tab_pane_3" role="tabpanel">
-                    ...
+                <div class="tab-pane fade" id="conv" role="tabpanel">
+                    <livewire:mod.editing-mod-convert :modPath="$modPath" />
                 </div>
             </div>
         </div>
