@@ -23,7 +23,7 @@
                 <div class="card-body">
                     <ul class="nav flex-column">
                         <li class="nav-item">
-                            <a class="nav-link" data-bs-toggle="tab" href="#about">
+                            <a class="nav-link active" data-bs-toggle="tab" href="#about">
                                 <iconify-icon icon="line-md:home-md-alt-twotone" width="24" height="24"></iconify-icon>
                                 Général
                             </a>
@@ -58,11 +58,11 @@
         </div>
         <div class="col-md-9">
             <div class="tab-content" id="myTabContent">
-                <div class="tab-pane fade show active" id="kt_tab_pane_1" role="about">
+                <div class="tab-pane fade show active" id="about" role="about">
                     <livewire:mod.editing-mod-general :modPath="$modPath" />
                 </div>
-                <div class="tab-pane fade" id="kt_tab_pane_2" role="tabpanel">
-                    ...
+                <div class="tab-pane fade" id="traductions" role="tabpanel">
+                    <livewire:mod.editing-mod-translate :modPath="$modPath" />
                 </div>
                 <div class="tab-pane fade" id="kt_tab_pane_3" role="tabpanel">
                     ...
