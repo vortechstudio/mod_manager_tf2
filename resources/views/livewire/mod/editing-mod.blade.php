@@ -4,7 +4,7 @@
             <div class="d-flex justify-content-between align-items-center">
                 <span>{{ $mod['name'] }}</span>
                 <div class="d-flex justify-content-end align-items-center gap-2">
-                    <button wire:click="close" class="btn btn-danger">
+                    <button wire:click="terminateEditing" class="btn btn-danger">
                         Terminer l'édition
                     </button>
                 </div>
